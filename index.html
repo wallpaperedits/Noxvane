@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -144,7 +144,8 @@
   <!-- Footer -->
   <footer class="border-t border-white/5 py-8 text-center text-sm text-gray-500 glass mt-12 relative">
     <p>© 2026 wallpaperedits.io • All edits curated for personal use.</p>
-    <button id="openAdminBtn" title="Admin Portal" class="mt-2 text-gray-600 hover:text-gray-400 transition text-xs">
+    <!-- Touch-Friendly, Easy-to-Tap Lock Icon Button -->
+    <button onclick="openModal()" title="Admin Portal" class="mt-3 p-3 text-gray-400 hover:text-white transition text-lg inline-block">
       <i class="fas fa-lock"></i>
     </button>
   </footer>
@@ -152,7 +153,7 @@
   <!-- Hidden Admin Panel Modal -->
   <div id="adminModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="glass max-w-2xl w-full rounded-3xl p-6 border border-white/10 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-      <button id="closeAdminBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
         <i class="fas fa-times"></i>
       </button>
 
@@ -423,10 +424,21 @@
       render();
     });
 
-    // Admin Handlers
-    const adminModal = document.getElementById('adminModal');
-    const openAdminBtn = document.getElementById('openAdminBtn');
-    const closeAdminBtn = document.getElementById('closeAdminBtn');
+    // Admin Panel Open/Close Handlers
+    function openModal() {
+      const modal = document.getElementById('adminModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('adminModal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
     const adminAuthScreen = document.getElementById('adminAuthScreen');
     const adminUploadScreen = document.getElementById('adminUploadScreen');
     const authForm = document.getElementById('authForm');
@@ -436,11 +448,12 @@
     const clearDataBtn = document.getElementById('clearDataBtn');
     const publishBtn = document.getElementById('publishBtn');
 
-    function openModal() { adminModal.classList.remove('hidden'); }
-    function closeModal() { adminModal.classList.add('hidden'); }
-
-    openAdminBtn.addEventListener('click', openModal);
-    closeAdminBtn.addEventListener('click', closeModal);
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        openModal();
+      }
+    });
 
     authForm.addEventListener('submit', (e) => {
       e.preventDefault();
