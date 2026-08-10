@@ -14,144 +14,196 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              dark: '#0c0b0a',
-              card: 'rgba(28, 25, 23, 0.75)',
-              brown: '#8c5a3c',
-              beige: '#c5a880',
-              cream: '#f5f0eb'
-            }
+            obsidian: '#080706',
+            cardDark: '#12100e',
+            mocha: '#8c5a3c',
+            champagne: '#dfc298',
+            silkCream: '#faf7f2'
           }
         }
       }
     }
   </script>
   <style>
-    body { background-color: #0c0b0a; font-family: system-ui, -apple-system, sans-serif; }
-    .glass { background: rgba(28, 25, 23, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glow-bg { background: radial-gradient(circle at 50% 0%, rgba(166, 124, 82, 0.18) 0%, transparent 70%); }
+    /* Force Deep Dark Obsidian Palette */
+    html, body { 
+      background-color: #080706 !important; 
+      color: #faf7f2;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Background Glow */
+    .hero-glow {
+      background: radial-gradient(circle at 50% -10%, rgba(140, 90, 60, 0.28) 0%, rgba(223, 194, 152, 0.05) 50%, transparent 80%);
+    }
+
+    /* Glassmorphism Panels */
+    .glass-header {
+      background: rgba(14, 12, 10, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(223, 194, 152, 0.15);
+    }
+    .glass-card {
+      background: #12100e;
+      border: 1px solid rgba(223, 194, 152, 0.18);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card:hover {
+      border-color: rgba(223, 194, 152, 0.5);
+      box-shadow: 0 15px 35px -5px rgba(140, 90, 60, 0.25);
+    }
+
+    /* Custom Scrollbar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Category Filter Buttons */
+    .filter-btn {
+      background: #161311;
+      border: 1px solid rgba(223, 194, 152, 0.25);
+      color: #d1c5b8;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .filter-btn:hover {
+      border-color: #dfc298;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
     .filter-btn.active {
-      background: linear-gradient(to right, #8c5a3c, #c5a880);
-      color: #0c0b0a;
+      background: linear-gradient(135deg, #a3704c 0%, #dfc298 100%);
+      color: #080706;
       font-weight: 700;
       border-color: transparent;
+      box-shadow: 0 4px 15px rgba(223, 194, 152, 0.3);
     }
-    
-    /* Subtle Text Shadow for High Contrast on Headings */
-    h1, h2 {
-      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.6);
+
+    /* Search Bar Styling */
+    .search-input-box {
+      background-color: #14110f !important;
+      border: 1px solid rgba(223, 194, 152, 0.25);
+      color: #ffffff !important;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
     }
-    
-    /* Defined search bar shadow, border, and focus behavior */
-    #searchInput {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-        transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    }
-    #searchInput:focus {
-        border-color: #c5a880; /* Beige accent on focus */
-        box-shadow: 0 0 12px rgba(197, 168, 128, 0.35), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    .search-input-box:focus {
+      border-color: #dfc298;
+      box-shadow: 0 0 18px rgba(223, 194, 152, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
-<body class="text-stone-100 min-h-screen flex flex-col glow-bg">
+<body class="min-h-screen flex flex-col hero-glow">
 
-  <!-- Header / Navigation -->
-  <header class="sticky top-0 z-30 w-full glass border-b border-white/10">
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-30 w-full glass-header">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#735338] to-[#c5a880] flex items-center justify-center font-bold text-stone-950 shadow-lg shadow-amber-900/30">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#8c5a3c] via-[#a3704c] to-[#dfc298] flex items-center justify-center font-black text-obsidian text-lg shadow-md shadow-[#8c5a3c]/30 group-hover:scale-105 transition duration-300">
           N
         </div>
-        <span class="font-bold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-stone-200 to-stone-400">
-          noxvane<span class="text-[#c5a880]">.pics</span>
-        </span>
-      </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-lg tracking-wide text-white leading-tight">
+            noxvane<span class="text-[#dfc298]">.pics</span>
+          </span>
+          <span class="text-[9px] uppercase tracking-widest text-[#a3704c] font-semibold">Curated Gallery</span>
+        </div>
+      </a>
 
+      <!-- Instagram Link -->
       <div class="flex items-center gap-3">
-        <!-- Instagram Link -->
-        <a href="https://instagram.com/noxvane.pics" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#8c5a3c] to-[#c5a880] hover:opacity-90 transition font-bold text-sm text-stone-950 shadow-md">
-          <i class="fab fa-instagram text-lg"></i>
-          <span class="hidden sm:inline">Follow on Insta</span>
+        <a href="https://instagram.com/noxvane.pics" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#8c5a3c] to-[#dfc298] hover:opacity-95 transition font-bold text-xs text-obsidian shadow-lg shadow-[#8c5a3c]/20">
+          <i class="fab fa-instagram text-base"></i>
+          <span class="hidden sm:inline">Follow @noxvane.pics</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="max-w-4xl mx-auto text-center px-4 pt-12 pb-6">
-    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#a67c52]/15 text-[#e6d5b8] border border-[#a67c52]/30 inline-block mb-4">
-      Uncompressed 4K & 8K Downloads
-    </span>
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
-      Elevate Your Screen. <br/>
-      <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#d7c4b7] via-[#e6d5b8] to-[#f5f0eb]">
-        No Compression. No Watermarks.
+  <section class="max-w-4xl mx-auto text-center px-4 pt-10 pb-4">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1c1714] border border-[#dfc298]/30 mb-5 shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-[#dfc298] animate-pulse"></span>
+      <span class="text-[11px] font-semibold text-[#dfc298] tracking-wide uppercase">Ultra-HD • 4K & 8K Uncompressed</span>
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 text-white leading-tight">
+      Elevate Your Display. <br/>
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#faf7f2] via-[#dfc298] to-[#a3704c]">
+        Pure Quality. Zero Compression.
       </span>
     </h1>
+    <p class="text-xs sm:text-sm text-stone-400 max-w-lg mx-auto mb-6">
+      Handcrafted edits, anime art, and atmospheric mobile wallpapers designed for modern high-resolution screens.
+    </p>
 
-    <!-- High-Contrast Search Bar -->
-    <div class="max-w-xl mx-auto mt-6 relative">
-      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-stone-300">
+    <!-- Search Input Bar -->
+    <div class="max-w-xl mx-auto relative">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#dfc298]">
         <i class="fas fa-search"></i>
       </div>
       <input 
         type="text" 
         id="searchInput" 
-        placeholder="Search wallpapers (e.g. Neon, AMOLED, Cyberpunk)..." 
-        class="w-full pl-11 pr-4 py-3.5 bg-black/60 border border-white/20 rounded-2xl focus:outline-none focus:ring-1 focus:ring-[#c5a880] transition text-stone-100 placeholder-stone-400 text-sm glass"
+        placeholder="Search edits (e.g., Anime, AMOLED, Cyberpunk)..." 
+        class="w-full pl-11 pr-4 py-3.5 rounded-2xl search-input-box focus:outline-none text-sm placeholder-stone-400"
       />
     </div>
 
-    <!-- Category Filters -->
-    <div class="flex flex-wrap items-center justify-center gap-2 mt-6" id="categoryFilters">
-      <button class="filter-btn active px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="all">All</button>
-      <button class="filter-btn px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="amoled">AMOLED</button>
-      <button class="filter-btn px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="cyberpunk">Cyberpunk</button>
-      <button class="filter-btn px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="anime">Anime</button>
-      <button class="filter-btn px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="minimal">Minimalist</button>
-      <button class="filter-btn px-4 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-stone-200 hover:border-[#a67c52]/50 transition" data-category="cinematic">Cinematic</button>
+    <!-- Category Filter Chips -->
+    <div class="flex items-center justify-start sm:justify-center gap-2 mt-6 overflow-x-auto no-scrollbar pb-2 px-2" id="categoryFilters">
+      <button class="filter-btn active px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="all">All Edits</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="amoled">AMOLED</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="cyberpunk">Cyberpunk</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="anime">Anime</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="minimal">Minimalist</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-xs whitespace-nowrap" data-category="cinematic">Cinematic</button>
     </div>
   </section>
 
-  <!-- Gallery Grid -->
-  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+  <!-- Gallery Grid Section -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6" id="gallery">
-      <!-- Dynamic Wallpaper Cards Rendered Here -->
+      <!-- Dynamically Rendered Wallpaper Cards -->
     </div>
     
     <!-- Empty State -->
-    <div id="noResults" class="hidden text-center py-16 text-stone-400">
-      <i class="fas fa-image-slash text-4xl mb-3 text-stone-600"></i>
-      <p class="text-base text-stone-300">No wallpapers available or match your search.</p>
+    <div id="noResults" class="hidden text-center py-20 text-stone-400">
+      <div class="w-16 h-16 rounded-full bg-[#181411] border border-[#dfc298]/20 flex items-center justify-center mx-auto mb-4 text-[#dfc298] text-2xl">
+        <i class="fas fa-image-slash"></i>
+      </div>
+      <p class="text-base text-stone-200 font-semibold">No wallpapers found</p>
+      <p class="text-xs text-stone-500 mt-1">Try searching for something else or reset filters.</p>
     </div>
   </main> 
   
-  <!-- Image Preview Modal -->
-  <div id="previewModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="relative max-w-sm w-full h-[85vh] flex flex-col items-center justify-between glass rounded-3xl p-4 border border-white/10 overflow-hidden">
+  <!-- Lockscreen Image Preview Modal -->
+  <div id="previewModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 hidden">
+    <div class="relative max-w-sm w-full h-[85vh] flex flex-col items-center justify-between glass-card rounded-3xl p-4 border border-[#dfc298]/30 overflow-hidden shadow-2xl">
       
       <!-- Close Button -->
-      <button onclick="closePreview()" class="absolute top-4 right-4 z-20 w-10 h-10 bg-black/60 text-white rounded-full flex items-center justify-center text-lg border border-white/20">
+      <button onclick="closePreview()" class="absolute top-4 right-4 z-20 w-10 h-10 bg-black/70 text-white rounded-full flex items-center justify-center text-lg border border-white/20 hover:scale-105 transition">
         <i class="fas fa-times"></i>
       </button>
 
-      <!-- Lockscreen Time Overlay -->
-      <div id="lockscreenOverlay" class="absolute top-8 inset-x-0 text-center pointer-events-none z-10 text-white drop-shadow-md">
-        <p class="text-xs font-medium tracking-widest uppercase opacity-80">Monday, August 10</p>
-        <p class="text-5xl font-light tracking-tight mt-1">09:41</p>
+      <!-- Simulated Phone Lockscreen Overlay -->
+      <div id="lockscreenOverlay" class="absolute top-8 inset-x-0 text-center pointer-events-none z-10 text-white drop-shadow-lg">
+        <p class="text-xs font-semibold tracking-widest uppercase opacity-90 text-[#dfc298]">Monday, August 10</p>
+        <p class="text-6xl font-extralight tracking-tight mt-1 text-white">09:41</p>
       </div>
 
-      <!-- Preview Image Container -->
-      <div class="w-full h-full rounded-2xl overflow-hidden relative bg-black/50 flex items-center justify-center">
+      <!-- Preview Wallpaper Box -->
+      <div class="w-full h-full rounded-2xl overflow-hidden relative bg-black/60 flex items-center justify-center border border-white/10">
         <img id="previewImageSrc" src="" class="w-full h-full object-cover" />
       </div>
 
-      <!-- Modal Bottom Bar -->
+      <!-- Modal Actions Bar -->
       <div class="w-full pt-3 flex items-center gap-2 z-10">
-        <button onclick="toggleClock()" class="py-2.5 px-4 bg-white/10 hover:bg-white/20 transition rounded-xl text-xs font-semibold text-white flex items-center gap-1.5">
-          <i class="fas fa-clock"></i> Clock
+        <button onclick="toggleClock()" class="py-2.5 px-4 bg-white/10 hover:bg-white/20 transition rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 border border-white/10">
+          <i class="fas fa-clock"></i> Toggle Clock
         </button>
-        <button onclick="downloadCurrentPreview()" class="flex-1 py-2.5 bg-gradient-to-r from-[#8c5a3c] to-[#c5a880] hover:opacity-90 transition rounded-xl text-xs font-bold text-stone-950 shadow-lg flex items-center justify-center gap-2">
+        <button onclick="downloadCurrentPreview()" class="flex-1 py-2.5 bg-gradient-to-r from-[#8c5a3c] to-[#dfc298] hover:opacity-90 transition rounded-xl text-xs font-extrabold text-obsidian shadow-lg flex items-center justify-center gap-2">
           <i class="fas fa-download"></i> Download 4K
         </button>
       </div>
@@ -160,68 +212,68 @@
   </div>
 
   <!-- Footer -->
-  <footer class="border-t border-white/5 py-8 text-center text-sm text-stone-400 glass mt-12 relative">
-    <p>© 2026 noxvane.pics • All edits curated for personal use.</p>
-    <button onclick="openModal()" title="Admin Portal" class="mt-3 p-3 text-stone-500 hover:text-white transition text-lg inline-block">
+  <footer class="border-t border-[#dfc298]/15 py-8 text-center text-xs text-stone-400 glass-header mt-12 relative">
+    <p>© 2026 noxvane.pics • Ultra-HD Edits Curated for Personal Screens.</p>
+    <button onclick="openModal()" title="Admin Portal" class="mt-3 p-3 text-stone-600 hover:text-[#dfc298] transition text-lg inline-block">
       <i class="fas fa-lock"></i>
     </button>
   </footer>
 
-  <!-- Hidden Admin Panel Modal (Global Uploads) -->
-  <div id="adminModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="glass max-w-2xl w-full rounded-3xl p-6 border border-white/10 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  <!-- Admin Panel Modal (GitHub Integrated) -->
+  <div id="adminModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-card max-w-2xl w-full rounded-3xl p-6 border border-[#dfc298]/30 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-lg">
         <i class="fas fa-times"></i>
       </button>
 
-      <!-- Step 1: Authentication Screen -->
+      <!-- Passcode Screen -->
       <div id="adminAuthScreen">
         <div class="text-center mb-6">
-          <div class="w-12 h-12 rounded-2xl bg-[#a67c52]/20 text-[#c5a880] flex items-center justify-center mx-auto mb-3 text-xl border border-[#a67c52]/30">
+          <div class="w-12 h-12 rounded-2xl bg-[#8c5a3c]/20 text-[#dfc298] flex items-center justify-center mx-auto mb-3 text-xl border border-[#dfc298]/30">
             <i class="fas fa-user-shield"></i>
           </div>
-          <h2 class="text-xl font-bold text-white">Admin Authentication</h2>
-          <p class="text-xs text-stone-400 mt-1">Enter passcode to manage global wallpapers</p>
+          <h2 class="text-xl font-bold text-white">Admin Portal</h2>
+          <p class="text-xs text-stone-400 mt-1">Enter key to manage live wallpapers</p>
         </div>
 
         <form id="authForm" class="space-y-4">
           <div>
-            <input type="password" id="passcodeInput" placeholder="Enter Passcode..." class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-[#c5a880] text-white text-sm" required />
+            <input type="password" id="passcodeInput" placeholder="Enter Passcode..." class="w-full px-4 py-3 bg-[#181411] border border-[#dfc298]/30 rounded-xl focus:outline-none focus:border-[#dfc298] text-white text-sm" required />
             <p id="authError" class="text-xs text-red-400 mt-1 hidden">Incorrect passcode. Try again.</p>
           </div>
-          <button type="submit" class="w-full py-3 bg-[#8c5a3c] hover:bg-[#735338] transition font-semibold text-white rounded-xl text-sm">
-            Unlock Global Panel
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#8c5a3c] to-[#dfc298] transition font-bold text-obsidian rounded-xl text-sm shadow-md">
+            Unlock Admin Panel
           </button>
         </form>
       </div>
 
-      <!-- Step 2: Dashboard Screen -->
+      <!-- Admin Upload & Management Dashboard -->
       <div id="adminUploadScreen" class="hidden">
         <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fas fa-sliders-h text-[#c5a880]"></i> Global Admin Dashboard
+            <i class="fas fa-sliders-h text-[#dfc298]"></i> Global Admin Dashboard
           </h2>
         </div>
 
-        <!-- GitHub Token Configuration -->
-        <div class="mb-6 bg-[#a67c52]/10 p-3.5 rounded-2xl border border-[#a67c52]/20">
-          <label class="block text-xs font-bold text-[#e6d5b8] mb-1"><i class="fab fa-github"></i> GitHub Personal Access Token (PAT)</label>
-          <input type="password" id="ghTokenInput" placeholder="Paste ghp_xxxxxxxx Token..." class="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-xl text-white text-xs focus:border-[#c5a880] focus:outline-none mb-1" />
-          <p class="text-[10px] text-stone-400">Saved locally on your phone. Required so uploads automatically go live globally for all users.</p>
+        <!-- GitHub PAT Token Box -->
+        <div class="mb-6 bg-[#1f1914] p-3.5 rounded-2xl border border-[#8c5a3c]/40">
+          <label class="block text-xs font-bold text-[#dfc298] mb-1"><i class="fab fa-github"></i> GitHub Personal Access Token (PAT)</label>
+          <input type="password" id="ghTokenInput" placeholder="Paste ghp_xxxxxxxx Token..." class="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-white text-xs focus:border-[#dfc298] focus:outline-none mb-1" />
+          <p class="text-[10px] text-stone-400">Saved locally on your phone. Uploads commit straight to GitHub!</p>
         </div>
 
         <!-- Add Form -->
-        <form id="uploadForm" class="space-y-4 mb-8 bg-white/5 p-4 rounded-2xl border border-white/5">
-          <h3 class="text-sm font-bold text-[#e6d5b8] mb-2"><i class="fas fa-plus-circle"></i> Add New Wallpaper (Global)</h3>
+        <form id="uploadForm" class="space-y-4 mb-8 bg-[#181411] p-4 rounded-2xl border border-white/10">
+          <h3 class="text-sm font-bold text-[#dfc298] mb-2"><i class="fas fa-plus-circle"></i> Publish New Wallpaper</h3>
           <div>
             <label class="block text-xs font-semibold text-stone-300 mb-1">Wallpaper Title</label>
-            <input type="text" id="wpTitle" placeholder="e.g. Neon Cyberpunk Street" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:border-[#c5a880] focus:outline-none" required />
+            <input type="text" id="wpTitle" placeholder="e.g., Neon Cyberpunk Street" class="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none" required />
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-semibold text-stone-300 mb-1">Category</label>
-              <select id="wpCategory" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:border-[#c5a880] focus:outline-none bg-stone-900">
+              <select id="wpCategory" class="w-full px-3 py-2 bg-stone-900 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none">
                 <option value="amoled">AMOLED</option>
                 <option value="cyberpunk">Cyberpunk</option>
                 <option value="anime">Anime</option>
@@ -231,7 +283,7 @@
             </div>
             <div>
               <label class="block text-xs font-semibold text-stone-300 mb-1">Resolution Badge</label>
-              <select id="wpRes" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:border-[#c5a880] focus:outline-none bg-stone-900">
+              <select id="wpRes" class="w-full px-3 py-2 bg-stone-900 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none">
                 <option value="4K Ultra HD">4K Ultra HD</option>
                 <option value="8K Ultra HD">8K Ultra HD</option>
               </select>
@@ -239,19 +291,19 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-stone-300 mb-1">Upload File OR Image Direct URL</label>
+            <label class="block text-xs font-semibold text-stone-300 mb-1">Select File OR Paste Direct URL</label>
             <input type="file" id="wpFileInput" accept="image/*" class="w-full text-xs text-stone-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#8c5a3c] file:text-white hover:file:bg-[#735338] cursor-pointer border border-white/10 rounded-xl p-1 mb-2" />
-            <input type="url" id="wpUrlInput" placeholder="...or paste Image Direct URL (https://...)" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:border-[#c5a880] focus:outline-none" />
+            <input type="url" id="wpUrlInput" placeholder="...or paste Direct Image URL (https://...)" class="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-white text-xs focus:border-[#dfc298] focus:outline-none" />
           </div>
 
-          <button type="submit" id="publishBtn" class="w-full py-3 bg-gradient-to-r from-[#8c5a3c] to-[#c5a880] hover:opacity-90 transition font-bold text-stone-950 rounded-xl text-sm shadow-lg mt-2">
+          <button type="submit" id="publishBtn" class="w-full py-3 bg-gradient-to-r from-[#8c5a3c] to-[#dfc298] transition font-bold text-obsidian rounded-xl text-sm shadow-md mt-2">
             Publish Wallpaper Globally
           </button>
         </form>
 
         <!-- Manage & Delete Section -->
         <div>
-          <h3 class="text-sm font-bold text-red-400 mb-3"><i class="fas fa-trash-alt"></i> Manage & Delete Wallpapers</h3>
+          <h3 class="text-sm font-bold text-red-400 mb-3"><i class="fas fa-trash-alt"></i> Manage & Delete Live Wallpapers</h3>
           <div id="adminWallpaperList" class="space-y-2">
             <!-- Dynamic delete list -->
           </div>
@@ -279,7 +331,7 @@
     const noResults = document.getElementById('noResults');
     const ghTokenInput = document.getElementById('ghTokenInput');
 
-    // Load saved GitHub PAT token from browser storage
+    // Load saved GitHub token
     if (localStorage.getItem('gh_pat_token')) {
       ghTokenInput.value = localStorage.getItem('gh_pat_token');
     }
@@ -288,7 +340,7 @@
       localStorage.setItem('gh_pat_token', ghTokenInput.value.trim());
     });
 
-    // Load live wallpapers.json from GitHub
+    // Fetch wallpapers from wallpapers.json
     async function loadGlobalWallpapers() {
       try {
         const res = await fetch('./wallpapers.json?v=' + Date.now());
@@ -317,31 +369,31 @@
       } else {
         noResults.classList.add('hidden');
         gallery.innerHTML = filtered.map(wp => `
-          <div class="glass rounded-2xl overflow-hidden group hover:border-[#c5a880]/50 transition duration-300 flex flex-col hover:shadow-xl hover:shadow-stone-900/50">
-            <div class="relative overflow-hidden aspect-[9/16] bg-black/40 cursor-pointer" onclick="openPreview('${wp.id}')">
+          <div class="glass-card rounded-2xl overflow-hidden group transition-all duration-300 flex flex-col">
+            <div class="relative overflow-hidden aspect-[9/16] bg-black/60 cursor-pointer" onclick="openPreview('${wp.id}')">
               <img 
                 src="${wp.url}" 
                 alt="${wp.title}" 
                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                 loading="lazy"
               />
-              <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2 py-1 rounded-md text-[10px] font-semibold text-[#e6d5b8] border border-white/10">
+              <div class="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-md text-[9px] font-extrabold text-[#dfc298] border border-[#dfc298]/30">
                 ${wp.res}
               </div>
-              <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold">
+              <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold">
                 <i class="fas fa-eye mr-1.5"></i> Tap Preview
               </div>
             </div>
-            <div class="p-4 flex flex-col justify-between flex-1">
+            <div class="p-3.5 flex flex-col justify-between flex-1">
               <div>
-                <span class="text-[10px] uppercase tracking-wider font-bold text-[#c5a880]">${wp.category}</span>
-                <h3 class="font-bold text-sm text-white truncate mt-1">${wp.title}</h3>
+                <span class="text-[9px] uppercase tracking-widest font-extrabold text-[#dfc298]">${wp.category}</span>
+                <h3 class="font-bold text-xs sm:text-sm text-white truncate mt-0.5">${wp.title}</h3>
               </div>
               <button 
                 onclick="triggerDownload('${wp.id}')" 
-                class="mt-3 w-full py-2 bg-white/10 hover:bg-[#8c5a3c] transition text-center text-xs font-semibold rounded-xl text-white flex items-center justify-center gap-2"
+                class="mt-3 w-full py-2 bg-[#1c1714] hover:bg-[#8c5a3c] transition text-center text-xs font-bold rounded-xl text-white border border-[#8c5a3c]/40 flex items-center justify-center gap-1.5 shadow-sm"
               >
-                <i class="fas fa-download"></i> Download 4K
+                <i class="fas fa-download text-xs"></i> Download
               </button>
             </div>
           </div>
@@ -351,7 +403,7 @@
       renderAdminList();
     }
 
-    // High Reliability Mobile Download Engine
+    // Mobile High-Reliability File Downloader
     async function triggerDownload(id) {
       const wp = wallpapers.find(w => w.id == id);
       if (!wp) return;
@@ -387,7 +439,7 @@
       }
     }
 
-    // Modal Controls
+    // Modal Control Logic
     function openPreview(id) {
       const wp = wallpapers.find(w => w.id == id);
       if (!wp) return;
@@ -418,12 +470,12 @@
         return;
       }
       adminList.innerHTML = wallpapers.map(wp => `
-        <div class="flex items-center justify-between p-2 bg-white/5 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between p-2 bg-black/40 rounded-xl border border-white/10">
           <div class="flex items-center gap-3 overflow-hidden">
             <img src="${wp.url}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" />
             <div class="truncate">
               <p class="text-xs font-bold text-white truncate">${wp.title}</p>
-              <span class="text-[10px] text-stone-300 uppercase">${wp.category}</span>
+              <span class="text-[10px] text-[#dfc298] uppercase">${wp.category}</span>
             </div>
           </div>
           <button onclick="deleteWallpaper('${wp.id}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-xs font-semibold transition border border-red-500/30 flex-shrink-0 ml-2">
@@ -433,7 +485,7 @@
       `).join('');
     }
 
-    // GitHub API Helper Functions
+    // GitHub API Commit Functions
     async function updateGitHubWallpapersJson(newWallpapersArray, commitMsg) {
       const token = ghTokenInput.value.trim();
       if (!token) {
@@ -501,7 +553,6 @@
       render();
     });
 
-    // Admin Modal Open / Close Functions
     function openModal() {
       const modal = document.getElementById('adminModal');
       if (modal) modal.classList.remove('hidden');
@@ -532,7 +583,6 @@
       }
     });
 
-    // Compress photo before global commit
     function compressAndGetBase64(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -626,7 +676,7 @@
           wallpapers = updatedArray;
           render();
           uploadForm.reset();
-          alert('Wallpaper published globally! It will be live for everyone on all devices within 60 seconds.');
+          alert('Wallpaper published globally! It will be live for everyone within 60 seconds.');
           closeModal();
         } else {
           alert('Failed to publish. Please check your GitHub token permissions.');
@@ -651,6 +701,5 @@
   </script>
 </body>
 </html>
-
-        
           
+      
