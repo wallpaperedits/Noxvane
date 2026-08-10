@@ -146,18 +146,20 @@
       <input 
         type="text" 
         id="searchInput" 
-        placeholder="Search edits (e.g., Anime, AMOLED)..." 
+        placeholder="Search edits (e.g., Anime, God, Cars)..." 
         class="w-full pl-11 pr-4 py-3 rounded-2xl search-input-box focus:outline-none text-sm placeholder-stone-400"
       />
     </div>
 
-    <!-- Category Filter Chips (Overflow Contrained) -->
+    <!-- Category Filter Chips -->
     <div class="w-full max-w-full overflow-x-auto no-scrollbar mt-5 pb-2 px-1">
       <div class="flex items-center justify-start sm:justify-center gap-2 w-max mx-auto" id="categoryFilters">
         <button class="filter-btn active px-4 py-2 rounded-full text-xs" data-category="all">All Edits</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="amoled">AMOLED</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="cyberpunk">Cyberpunk</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="anime">Anime</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="god">God</button>
+        <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="cars">Cars</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="minimal">Minimalist</button>
         <button class="filter-btn px-4 py-2 rounded-full text-xs" data-category="cinematic">Cinematic</button>
       </div>
@@ -249,7 +251,7 @@
         </form>
       </div>
 
-      <!-- Admin Upload Dashboard -->
+      <!-- Admin Upload & Edit Dashboard -->
       <div id="adminUploadScreen" class="hidden">
         <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -264,7 +266,55 @@
           <p class="text-[10px] text-stone-400">Saved locally on your phone. Uploads commit straight to GitHub!</p>
         </div>
 
-        <!-- Add Form -->
+        <!-- EDIT FORM SECTION (Hidden by default, shown when clicking 'Edit') -->
+        <div id="editFormSection" class="hidden mb-8 bg-[#1f1914] p-4 rounded-2xl border border-[#dfc298]/50 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-[#dfc298]"><i class="fas fa-edit"></i> Edit Wallpaper Details</h3>
+            <button type="button" onclick="cancelEdit()" class="text-xs text-stone-400 hover:text-white"><i class="fas fa-times"></i> Cancel</button>
+          </div>
+          <form id="editForm" class="space-y-3">
+            <input type="hidden" id="editWpId" />
+            <div>
+              <label class="block text-xs font-semibold text-stone-300 mb-1">Title</label>
+              <input type="text" id="editWpTitle" class="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none" required />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-1">Category</label>
+                <select id="editWpCategory" class="w-full px-3 py-2 bg-stone-900 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none">
+                  <option value="amoled">AMOLED</option>
+                  <option value="cyberpunk">Cyberpunk</option>
+                  <option value="anime">Anime</option>
+                  <option value="god">God</option>
+                  <option value="cars">Cars</option>
+                  <option value="minimal">Minimalist</option>
+                  <option value="cinematic">Cinematic</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-300 mb-1">Resolution Badge</label>
+                <select id="editWpRes" class="w-full px-3 py-2 bg-stone-900 border border-white/10 rounded-xl text-white text-sm focus:border-[#dfc298] focus:outline-none">
+                  <option value="4K Ultra HD">4K Ultra HD</option>
+                  <option value="8K Ultra HD">8K Ultra HD</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-stone-300 mb-1">Image URL</label>
+              <input type="url" id="editWpUrl" class="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-xl text-white text-xs focus:border-[#dfc298] focus:outline-none" required />
+            </div>
+            <div class="flex gap-2 pt-1">
+              <button type="submit" id="saveEditBtn" class="flex-1 py-2.5 bg-gradient-to-r from-[#8c5a3c] to-[#dfc298] font-bold text-obsidian rounded-xl text-xs shadow-md">
+                Save & Update Globally
+              </button>
+              <button type="button" onclick="cancelEdit()" class="px-4 py-2.5 bg-white/10 font-semibold text-stone-300 rounded-xl text-xs">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ADD FORM SECTION -->
         <form id="uploadForm" class="space-y-4 mb-8 bg-[#181411] p-4 rounded-2xl border border-white/10">
           <h3 class="text-sm font-bold text-[#dfc298] mb-2"><i class="fas fa-plus-circle"></i> Publish New Wallpaper</h3>
           <div>
@@ -279,6 +329,8 @@
                 <option value="amoled">AMOLED</option>
                 <option value="cyberpunk">Cyberpunk</option>
                 <option value="anime">Anime</option>
+                <option value="god">God</option>
+                <option value="cars">Cars</option>
                 <option value="minimal">Minimalist</option>
                 <option value="cinematic">Cinematic</option>
               </select>
@@ -303,11 +355,11 @@
           </button>
         </form>
 
-        <!-- Manage & Delete Section -->
+        <!-- Manage & Edit/Delete Section -->
         <div>
-          <h3 class="text-sm font-bold text-red-400 mb-3"><i class="fas fa-trash-alt"></i> Manage & Delete Live Wallpapers</h3>
+          <h3 class="text-sm font-bold text-[#dfc298] mb-3"><i class="fas fa-edit"></i> Manage, Edit & Delete Live Wallpapers</h3>
           <div id="adminWallpaperList" class="space-y-2">
-            <!-- Dynamic delete list -->
+            <!-- Dynamic delete/edit list -->
           </div>
         </div>
 
@@ -460,6 +512,7 @@
       }
     }
 
+    // Render Admin List with Edit and Delete options
     function renderAdminList() {
       const adminList = document.getElementById('adminWallpaperList');
       if (!adminList) return;
@@ -473,15 +526,74 @@
             <img src="${wp.url}" class="w-10 h-10 object-cover rounded-lg flex-shrink-0" />
             <div class="truncate">
               <p class="text-xs font-bold text-white truncate">${wp.title}</p>
-              <span class="text-[10px] text-[#dfc298] uppercase">${wp.category}</span>
+              <span class="text-[10px] text-[#dfc298] uppercase">${wp.category} • ${wp.res}</span>
             </div>
           </div>
-          <button onclick="deleteWallpaper('${wp.id}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-xs font-semibold transition border border-red-500/30 flex-shrink-0 ml-2">
-            <i class="fas fa-trash"></i> Delete
-          </button>
+          <div class="flex items-center gap-1.5 flex-shrink-0 ml-2">
+            <button onclick="openEditForm('${wp.id}')" class="px-2.5 py-1.5 bg-[#8c5a3c]/30 hover:bg-[#8c5a3c] text-[#dfc298] hover:text-white rounded-lg text-xs font-semibold transition border border-[#dfc298]/30">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button onclick="deleteWallpaper('${wp.id}')" class="px-2.5 py-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-xs font-semibold transition border border-red-500/30">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         </div>
       `).join('');
     }
+
+    // EDIT WALLPAPER HANDLERS
+    function openEditForm(id) {
+      const wp = wallpapers.find(w => w.id == id);
+      if (!wp) return;
+
+      document.getElementById('editWpId').value = wp.id;
+      document.getElementById('editWpTitle').value = wp.title;
+      document.getElementById('editWpCategory').value = wp.category;
+      document.getElementById('editWpRes').value = wp.res;
+      document.getElementById('editWpUrl').value = wp.url;
+
+      const editSection = document.getElementById('editFormSection');
+      editSection.classList.remove('hidden');
+      editSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelEdit() {
+      document.getElementById('editFormSection').classList.add('hidden');
+      document.getElementById('editForm').reset();
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('saveEditBtn');
+      const id = document.getElementById('editWpId').value;
+      const title = document.getElementById('editWpTitle').value;
+      const category = document.getElementById('editWpCategory').value;
+      const res = document.getElementById('editWpRes').value;
+      const url = document.getElementById('editWpUrl').value;
+
+      saveBtn.innerText = 'Saving Changes...';
+
+      const index = wallpapers.findIndex(w => w.id == id);
+      if (index !== -1) {
+        const updatedWallpapers = [...wallpapers];
+        updatedWallpapers[index] = {
+          ...updatedWallpapers[index],
+          title: title,
+          category: category,
+          res: res,
+          url: url
+        };
+
+        const success = await updateGitHubWallpapersJson(updatedWallpapers, `Edit wallpaper ${id}: ${title}`);
+        if (success) {
+          wallpapers = updatedWallpapers;
+          render();
+          cancelEdit();
+          alert('Wallpaper updated globally!');
+        }
+      }
+      saveBtn.innerText = 'Save & Update Globally';
+    });
 
     async function updateGitHubWallpapersJson(newWallpapersArray, commitMsg) {
       const token = ghTokenInput.value.trim();
@@ -698,4 +810,9 @@
   </script>
 </body>
 </html>
-                            
+
+    
+        
+          
+        
+        
