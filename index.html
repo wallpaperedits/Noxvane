@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -144,7 +144,6 @@
   <!-- Footer -->
   <footer class="border-t border-white/5 py-8 text-center text-sm text-gray-500 glass mt-12 relative">
     <p>© 2026 wallpaperedits.io • All edits curated for personal use.</p>
-    <!-- Touch-Friendly, Easy-to-Tap Lock Icon Button -->
     <button onclick="openModal()" title="Admin Portal" class="mt-3 p-3 text-gray-400 hover:text-white transition text-lg inline-block">
       <i class="fas fa-lock"></i>
     </button>
@@ -180,16 +179,22 @@
 
       <!-- Step 2: Dashboard Screen -->
       <div id="adminUploadScreen" class="hidden">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fas fa-sliders-h text-violet-400"></i> Admin Dashboard
+            <i class="fas fa-sliders-h text-violet-400"></i> Global Admin Dashboard
           </h2>
-          <button id="clearDataBtn" class="text-xs text-red-400 hover:underline">Reset Default Data</button>
+        </div>
+
+        <!-- GitHub Token Configuration -->
+        <div class="mb-6 bg-violet-500/10 p-3.5 rounded-2xl border border-violet-500/20">
+          <label class="block text-xs font-bold text-violet-300 mb-1"><i class="fab fa-github"></i> GitHub Personal Access Token (PAT)</label>
+          <input type="password" id="ghTokenInput" placeholder="Paste ghp_xxxxxxxx Token..." class="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-white text-xs focus:border-violet-500 focus:outline-none mb-1" />
+          <p class="text-[10px] text-gray-400">Saved locally on your phone. Required so uploads automatically go live globally for all users.</p>
         </div>
 
         <!-- Add Form -->
         <form id="uploadForm" class="space-y-4 mb-8 bg-white/5 p-4 rounded-2xl border border-white/5">
-          <h3 class="text-sm font-bold text-violet-300 mb-2"><i class="fas fa-plus-circle"></i> Add New Wallpaper</h3>
+          <h3 class="text-sm font-bold text-violet-300 mb-2"><i class="fas fa-plus-circle"></i> Add New Wallpaper (Global)</h3>
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Wallpaper Title</label>
             <input type="text" id="wpTitle" placeholder="e.g. Neon Cyberpunk Street" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:border-violet-500 focus:outline-none" required />
@@ -216,13 +221,13 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">Upload File OR Image URL</label>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Upload File OR Image Direct URL</label>
             <input type="file" id="wpFileInput" accept="image/*" class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-500 cursor-pointer border border-white/10 rounded-xl p-1 mb-2" />
             <input type="url" id="wpUrlInput" placeholder="...or paste Image Direct URL (https://...)" class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:border-violet-500 focus:outline-none" />
           </div>
 
           <button type="submit" id="publishBtn" class="w-full py-3 bg-gradient-to-r from-violet-600 to-pink-600 hover:opacity-90 transition font-semibold text-white rounded-xl text-sm shadow-lg mt-2">
-            Publish Wallpaper
+            Publish Wallpaper Globally
           </button>
         </form>
 
@@ -242,27 +247,10 @@
   <!-- Interactive JavaScript Engine -->
   <script>
     const ADMIN_PASSCODE = 'Vilesh1126.';
+    const REPO_OWNER = 'wallpaperedits';
+    const REPO_NAME = 'wallpaperedits';
 
-    const defaultWallpapers = [];
-
-    function getWallpapers() {
-      try {
-        const stored = localStorage.getItem('wallpaperedits_data');
-        return stored ? JSON.parse(stored) : defaultWallpapers;
-      } catch (e) {
-        return defaultWallpapers;
-      }
-    }
-
-    function saveWallpapers(arr) {
-      try {
-        localStorage.setItem('wallpaperedits_data', JSON.stringify(arr));
-      } catch (e) {
-        alert('Browser storage full! Try deleting older wallpapers or using an Image URL instead.');
-      }
-    }
-
-    let wallpapers = getWallpapers();
+    let wallpapers = [];
     let currentCategory = 'all';
     let searchQuery = '';
     let currentActiveWallpaper = null;
@@ -271,6 +259,31 @@
     const searchInput = document.getElementById('searchInput');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const noResults = document.getElementById('noResults');
+    const ghTokenInput = document.getElementById('ghTokenInput');
+
+    // Load GitHub token from phone storage
+    if (localStorage.getItem('gh_pat_token')) {
+      ghTokenInput.value = localStorage.getItem('gh_pat_token');
+    }
+
+    ghTokenInput.addEventListener('change', () => {
+      localStorage.setItem('gh_pat_token', ghTokenInput.value.trim());
+    });
+
+    // Fetch live wallpapers.json from GitHub
+    async function loadGlobalWallpapers() {
+      try {
+        const res = await fetch('./wallpapers.json?v=' + Date.now());
+        if (res.ok) {
+          wallpapers = await res.json();
+        } else {
+          wallpapers = [];
+        }
+      } catch (e) {
+        wallpapers = [];
+      }
+      render();
+    }
 
     function render() {
       const filtered = wallpapers.filter(wp => {
@@ -402,11 +415,59 @@
       `).join('');
     }
 
-    function deleteWallpaper(id) {
-      if (confirm('Delete this wallpaper?')) {
-        wallpapers = wallpapers.filter(wp => wp.id != id);
-        saveWallpapers(wallpapers);
-        render();
+    // GitHub API helper functions
+    async function updateGitHubWallpapersJson(newWallpapersArray, commitMsg) {
+      const token = ghTokenInput.value.trim();
+      if (!token) {
+        alert('Please paste your GitHub Personal Access Token into the Admin Panel box first!');
+        return false;
+      }
+
+      try {
+        // Get current wallpapers.json SHA
+        const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/wallpapers.json`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+        const getData = await getRes.json();
+        const sha = getData.sha;
+
+        // Commit updated json
+        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(newWallpapersArray, null, 2))));
+
+        const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/wallpapers.json`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: commitMsg,
+            content: contentBase64,
+            sha: sha
+          })
+        });
+
+        return putRes.ok;
+      } catch (e) {
+        alert('GitHub Commit Error: Check your GitHub token.');
+        return false;
+      }
+    }
+
+    async function deleteWallpaper(id) {
+      if (confirm('Delete this wallpaper globally for all visitors?')) {
+        const publishBtn = document.getElementById('publishBtn');
+        const originalText = publishBtn.innerText;
+        publishBtn.innerText = 'Deleting from GitHub...';
+        
+        const updated = wallpapers.filter(wp => wp.id != id);
+        const success = await updateGitHubWallpapersJson(updated, `Delete wallpaper ${id}`);
+        if (success) {
+          wallpapers = updated;
+          render();
+          alert('Successfully deleted globally!');
+        }
+        publishBtn.innerText = originalText;
       }
     }
 
@@ -424,19 +485,15 @@
       render();
     });
 
-    // Admin Panel Open/Close Handlers
+    // Admin Panel Handlers
     function openModal() {
       const modal = document.getElementById('adminModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-      }
+      if (modal) modal.classList.remove('hidden');
     }
 
     function closeModal() {
       const modal = document.getElementById('adminModal');
-      if (modal) {
-        modal.classList.add('hidden');
-      }
+      if (modal) modal.classList.add('hidden');
     }
 
     const adminAuthScreen = document.getElementById('adminAuthScreen');
@@ -445,15 +502,7 @@
     const passcodeInput = document.getElementById('passcodeInput');
     const authError = document.getElementById('authError');
     const uploadForm = document.getElementById('uploadForm');
-    const clearDataBtn = document.getElementById('clearDataBtn');
     const publishBtn = document.getElementById('publishBtn');
-
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
-        e.preventDefault();
-        openModal();
-      }
-    });
 
     authForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -467,7 +516,7 @@
       }
     });
 
-    // Canvas Downscaler for mobile photo optimizations
+    // Compress photo for faster commit
     function compressAndGetBase64(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -494,58 +543,96 @@
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          callback(canvas.toDataURL('image/jpeg', 0.88));
+          callback(canvas.toDataURL('image/jpeg', 0.85));
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    uploadForm.addEventListener('submit', (e) => {
+    uploadForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const token = ghTokenInput.value.trim();
+      if (!token) {
+        alert('Please paste your GitHub Personal Access Token into the box above first!');
+        return;
+      }
+
       const title = document.getElementById('wpTitle').value;
       const category = document.getElementById('wpCategory').value;
       const res = document.getElementById('wpRes').value;
       const fileInput = document.getElementById('wpFileInput');
       const urlInput = document.getElementById('wpUrlInput');
 
-      const addAndSave = (imageUrl) => {
+      const processAndUpload = async (imageUrl) => {
+        publishBtn.innerText = 'Publishing to GitHub...';
+        
+        const newId = Date.now();
+        let finalUrl = imageUrl;
+
+        // If uploading file, save file directly into github images folder
+        if (fileInput.files && fileInput.files[0]) {
+          try {
+            const rawBase64 = imageUrl.split(',')[1];
+            const imgPath = `images/wp-${newId}.jpg`;
+            
+            await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${imgPath}`, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message: `Upload ${title}`,
+                content: rawBase64
+              })
+            });
+
+            finalUrl = `./images/wp-${newId}.jpg`;
+          } catch(err) {
+            alert('Image upload failed. Try using an Image URL instead.');
+            publishBtn.innerText = 'Publish Wallpaper Globally';
+            return;
+          }
+        }
+
         const newWp = {
-          id: Date.now(),
+          id: newId,
           title: title,
           category: category,
           res: res,
-          url: imageUrl
+          url: finalUrl
         };
-        wallpapers.unshift(newWp);
-        saveWallpapers(wallpapers);
-        render();
-        uploadForm.reset();
-        publishBtn.innerText = 'Publish Wallpaper';
-        closeModal();
+
+        const updatedArray = [newWp, ...wallpapers];
+        const success = await updateGitHubWallpapersJson(updatedArray, `Add wallpaper: ${title}`);
+
+        if (success) {
+          wallpapers = updatedArray;
+          render();
+          uploadForm.reset();
+          alert('Wallpaper published globally! It will be live for everyone on all devices within 60 seconds.');
+          closeModal();
+        } else {
+          alert('Failed to publish. Please check your GitHub token permissions.');
+        }
+
+        publishBtn.innerText = 'Publish Wallpaper Globally';
       };
 
       if (fileInput.files && fileInput.files[0]) {
-        publishBtn.innerText = 'Optimizing & Uploading...';
+        publishBtn.innerText = 'Optimizing Image...';
         compressAndGetBase64(fileInput.files[0], (compressedUrl) => {
-          addAndSave(compressedUrl);
+          processAndUpload(compressedUrl);
         });
       } else if (urlInput.value.trim() !== '') {
-        addAndSave(urlInput.value.trim());
+        processAndUpload(urlInput.value.trim());
       } else {
         alert('Please select an image file or enter an Image URL.');
       }
     });
 
-    clearDataBtn.addEventListener('click', () => {
-      if (confirm('Reset back to default wallpapers?')) {
-        localStorage.removeItem('wallpaperedits_data');
-        wallpapers = defaultWallpapers;
-        render();
-      }
-    });
-
-    render();
+    loadGlobalWallpapers();
   </script>
 </body>
 </html>
