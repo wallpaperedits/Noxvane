@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -615,7 +615,6 @@
 
       const message = `Hey noxvane.pics! I'd love to request a wallpaper:\n\n📌 Title: ${title}\n🏷️ Category: ${cat || 'General'}\n📝 Details: ${details || 'None'}`;
       
-      const encodeMsg = encodeURIComponent(message);
       window.open(`https://instagram.com/noxvane.pics`, '_blank');
       closeSuggestionModal();
     }
@@ -796,35 +795,11 @@
       }
     });
 
-    function compressAndGetBase64(file, callback) {
+    // RAW UNCOMPRESSED FILE READER (100% ORIGINAL QUALITY)
+    function getOriginalBase64(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 1200;
-
-          if (width > height) {
-            if (width > maxDim) {
-              height *= maxDim / width;
-              width = maxDim;
-            }
-          } else {
-            if (height > maxDim) {
-              width *= maxDim / height;
-              height = maxDim;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          callback(canvas.toDataURL('image/jpeg', 0.85));
-        };
-        img.src = e.target.result;
+        callback(e.target.result); // 100% full resolution uncompressed base64
       };
       reader.readAsDataURL(file);
     }
@@ -847,7 +822,7 @@
       const urlInput = document.getElementById('wpUrlInput');
 
       const processAndUpload = async (imageUrl) => {
-        publishBtn.innerText = 'Publishing to GitHub...';
+        publishBtn.innerText = 'Publishing Uncompressed File to GitHub...';
         
         const newId = Date.now();
         let finalUrl = imageUrl;
@@ -864,7 +839,7 @@
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                message: `Upload ${title}`,
+                message: `Upload original ${title}`,
                 content: rawBase64
               })
             });
@@ -893,7 +868,7 @@
           renderCategoryUI();
           render();
           uploadForm.reset();
-          alert('Wallpaper published globally! It will be live for everyone within 60 seconds.');
+          alert('100% Original High-Res Wallpaper published globally! Live within 60 seconds.');
           closeModal();
         } else {
           alert('Failed to publish. Please check your GitHub token permissions.');
@@ -903,9 +878,9 @@
       };
 
       if (fileInput.files && fileInput.files[0]) {
-        publishBtn.innerText = 'Optimizing Image...';
-        compressAndGetBase64(fileInput.files[0], (compressedUrl) => {
-          processAndUpload(compressedUrl);
+        publishBtn.innerText = 'Reading Uncompressed File...';
+        getOriginalBase64(fileInput.files[0], (rawUrl) => {
+          processAndUpload(rawUrl);
         });
       } else if (urlInput.value.trim() !== '') {
         processAndUpload(urlInput.value.trim());
@@ -918,8 +893,9 @@
   </script>
 </body>
 </html>
-               
 
-      
 
-        
+          
+
+          
+    
